@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style type="text/css">
+			*{
+				padding: 0;
+				margin: 0;
+			}
+			ul li{
+				width: 100%;
+				height: 30px;
+				line-height: 30px;
+				padding-left: 50px;
+				box-sizing: border-box;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<ul class="box">
+			<li>雀氏纸尿布，天才第一步</li>
+			<li>雀氏纸尿布，天才第一步</li>
+			<li>雀氏纸尿布，天才第一步</li>
+			<li>雀氏纸尿布，天才第一步</li>
+			<li>雀氏纸尿布，天才第一步</li>
+		</ul>
+	</body>
+</html>
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript">
+//	一个关于extend和fn.extend的小应用
+//	简单来说,extend是放一些不操作dom的方法,而fn.extend则是操作dom
+	
+	$.extend({
+//		定义一个随机颜色的函数
+		ramColor(){
+			var str = '0123456789abcdef';
+			var color = '#';
+			for (var i=0;i<6;i++) {
+//				采用字符串拼接的方式
+				color += str[parseInt(Math.random()*16)];
+			}
+			return color;
+		}
+	})
+	
+	$.fn.extend({
+//		dom元素:设置颜色的方法
+		setColor(){
+//			jq循环，参数为索引和第几个元素
+			this.each(function(index,item){
+//				给循环到的那个定义背景颜色,值为上面的随机颜色值
+				$(item).css('background-color',$.ramColor());
+			})
+//			返回自身,跟jq链式原理一致
+			return this;
+		},
+//		dom操作事件，传一个对象，里面装的是样式
+		events(params){
+//			定义一个空的对象,目的是为了取点击 目的元素时的样式
+			var preCss = {};
+//			目标元素进行移进操作
+			this.on("mouseenter",function(){
+//				如果不传参就给他一个默认值
+				var _default = {
+					'background-color':"cornflowerblue",
+					'color':"white",
+					'width':"98%"
+				};
+//				遍历改变的参数,提取到他的参数加到上面的空对象
+				for (var i in _default) {
+					preCss[i] = $(this).css(i);
+				}
+//				把传参加到默认值
+				$.extend(_default, params);
+//				执行添加进来的样式
+				$(this).css(_default);
+			})
+			this.on('mouseleave',function(){
+//				鼠标移开后,回复改变前的样式
+				$(this).css(preCss);
+			})
+		}
+	})
+
+	$('li').setColor().events({'color':'yellow'});
+	
+</script>
